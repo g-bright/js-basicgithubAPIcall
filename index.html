@@ -1,0 +1,55 @@
+<html>
+    <body>
+        <div style="border: 1px solid black; padding:15px; margin-right: 80%;">
+           <div>
+            <label for="fname">Github Username</label>
+            <input type="text" id="uname" name="uname"><br><br>
+           </div>
+           <div>
+            <button class="countButton">Submit</button>
+           </div>
+           <br>
+           <div>
+           <div style="margin-right:60%">
+            <label id="response" for="response">Repository Count: </label>
+        </div>
+        <div style="margin-left: 45%; margin-top: 5%; margin-right: 5%; margin-bottom: 5% ;display:inline-block; margin-top:-20px">
+         <img src="git.png" style="width: 100%">
+     </div>
+    </div>
+        </div>
+
+
+
+           <script>
+                const button = document.querySelector('.countButton');
+                
+                button.addEventListener('click', event => {
+                    
+                    let myRequest = new Request(`https://api.github.com/users/${document.querySelector('#uname').value}`);
+                    console.log(myRequest)
+                    fetch(myRequest)
+                    .then(function(response) {
+                    if (!response.ok) {
+                        alert("Invalid Github username")
+                        console.log(`HTTP error! status: ${response.status}`);
+                        
+                    }
+                    return response.blob();
+                    })
+                    .then(response => response.text())
+                    .then(function(text) {
+                    let responseObject = (JSON.parse(text))
+                    let repCount = responseObject.public_repos
+                    console.log(repCount)
+                    if (responseObject.public_repos != null && responseObject.public_repos != undefined){
+                    output = "Repository Count: " + repCount
+                    document.querySelector('#response').innerHTML = output
+                    }
+                    });
+                                    });
+           </script>
+
+    
+    </body>
+</html>
